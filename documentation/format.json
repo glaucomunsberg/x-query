@@ -1,0 +1,18 @@
+{
+  "data_format":{
+    "type"      :["Number","String","Array"],
+    "label"     :"String",
+    "field"     :"String",
+    "values"    :{"key":"value"},
+    "ordenable" :["true","false"]
+  },
+  "operators":{
+    "types":{"or":"ou","and":"e","order":"ordernar","none":"none"}
+  },
+  "relations":{
+    "types":{"asc":"ASC","des":"DESC","equal":"Igual","less":"Menor","bigger":"Maior"}
+  },
+  "query":{
+    "query":[{"field":"STRING","relation":"STRING","value":"STRING","operator":"STRING"}]
+  }
+}
