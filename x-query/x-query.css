@@ -1,3 +1,66 @@
 :host {
   display: block;
+  min-width: 700px;
+  margin: 40px 10px 0px 20px;
+}
+div[line]{
+  position: absolute;
+  width: 1px;
+  background: var(--x-query-background-color,#00ad99);
+  height: 16px;
+  margin-top: -5px;
+}
+div[line_add]{
+  margin-left: 40px;
+}
+div[corner]{
+  border-top: 1px solid var(--x-query-background-color,#00ad99);
+  border-left: 1px solid var(--x-query-background-color,#00ad99);
+  height: 9px;
+  border-top-left-radius: 20px;
+  position: relative;
+  width: 64px;
+  float:left;
+  margin-left: 40px;
+  margin-top: 30px;
+}
+paper-icon-button[icon='cancel']{
+  float: left;
+}
+paper-dropdown-menu{
+  --paper-input-container-focus-color: var(--x-query-background-color,#00ad99);
+  --paper-input-container-color: var(--x-query-background-color,#00ad99);
+  float: left;
+  margin-left: -16px;
+  margin-top: -30px;
+}
+paper-dropdown-menu.error{
+  --paper-input-container-focus-color: var(--x-query-background-color-error,#f04b57);
+  --paper-input-container-color: var(--x-query-background-color-error,#f04b57);
+}
+paper-dropdown-menu[operators]{
+  width: 120px;
+  margin-left: -15px;
+  margin-top: -10px;
+}
+paper-input{
+  width: 186px;
+  float: left;
+  margin: -22px 8px 0px -8px;
+  --paper-input-container-color: var(--x-query-background-color,#00ad99);
+  --paper-input-container-focus-color: var(--x-query-background-color,#00ad99);
+  --paper-input-container-invalid-color: var(--x-query-background-color-error,#f04b57);
+  --paper-input-container-input-color: black;
+}
+
+paper-input[error]{
+  --paper-input-container-color: var(--x-query-background-color-error,#f04b57) !important;
+  --paper-input-container-focus-color: var(--x-query-background-color-error,#f04b57) !important;
+  --paper-input-container-invalid-color: var(--x-query-background-color-error,#f04b57) !important;
+  --paper-input-container-input-color: black;
+}
+
+div[start] paper-icon-button{
+  color: var(--x-query-background-color,#00ad99);
+  margin-left: 20px;
 }

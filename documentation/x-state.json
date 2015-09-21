@@ -1,7 +1,8 @@
-{
+var states = {
   "q0":{
           "q1":{"operators":["ORDER"]},
-          "q4":{"operators":["OR","END"]}
+          "q4":{"operators":["OR","END"]},
+          "q14":{"operators":["LIMIT"]}
   },
   "q1":{
           "q2":{"field":["ordenable"]}
@@ -44,4 +45,10 @@
   "q13":{
           "q0":[]
   },
+  "q14":{
+    "q15":{"field":{"type":"NUMBER","allow":"[0-9]"}}
+  },
+  "q15":{
+    "q0":[]
+  }
 }

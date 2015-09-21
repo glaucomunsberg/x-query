@@ -1,9 +1,46 @@
+<!--
+@license
+Copyright (c) 2015 Glaucoo Munsberg dos Santos Author. All rights reserved.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<!--
+Example:
+  <x-query id='1' ></x-query>
+
+`<x-query>` allow the users to building your own logic query
+  Attributes
+    id
+  Events
+    x-query-ready
+  Methods
+
+  Custom property
+    Name                              Function                        Color
+    --x-query-background-color        change background               #f04b57
+    --x-query-background-color-error  color when something is wrong   #f04b57
+
+-->
 <dom-module id="x-query">
   <link rel="stylesheet" href="x-query.css" />
   <template>
+    <div class='vertical layout start' id='query_ui'>
 
-    <h2>X query</h2>
+    </div>
+    <div class='vertical layout start' id='base'>
+      <div line line_add></div>
+      <div start>
+        <paper-icon-button on-click="newLine" icon='add-circle'></paper-icon-button>
+        <paper-tooltip>{{description}}</paper-tooltip>
+      </div>
+    </div>
   </template>
-
+  <script src="x-state.js"></script>
   <script src="x-query.js"></script>
 </dom-module>

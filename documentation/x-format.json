@@ -7,7 +7,8 @@
     "ordenable" :["true","false"]
   },
   "operators":{
-    "types":{"or":"ou","and":"e","order":"ordernar","none":"none"}
+    "types":{"or":"ou","and":"e","order":"ordernar","limit":"limite","none":"none"},
+    "label":"Operadores"
   },
   "relations":{
     "types":{"asc":"ASC","des":"DESC","equal":"Igual","less":"Menor","bigger":"Maior"}
