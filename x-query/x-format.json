@@ -1,0 +1,18 @@
+{
+  "data_format":{
+    "type"      :["Number","String","Array"],
+    "label"     :"String",
+    "field"     :"String",
+    "values"    :"Array",
+    "ordenable" :[true,false]
+  },
+  "operators":{
+    "types":{"or":"ou","and":"e","order":"ordernar","limit":"limite","none":"none","and_parenteses_left":"and (","or_parenteses_left":"or (","parenteses_right":")"}
+  },
+  "relations":{
+    "types":{"asc":"ASC","des":"DESC","equal":"Igual","less":"Menor","bigger":"Maior","least":"Ao menos","until":"Até"}
+  },
+  "query":{
+    "query":[{"field":"STRING","relation":"STRING","value":"STRING","operator":"STRING"}]
+  }
+}

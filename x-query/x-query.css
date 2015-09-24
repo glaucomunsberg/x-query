@@ -6,9 +6,9 @@
 div[line]{
   position: absolute;
   width: 1px;
-  background: var(--x-query-background-color,#00ad99);
+  background: white;
   height: 16px;
-  margin-top: -5px;
+  margin-top: -6px;
 }
 div[line_add]{
   margin-left: 40px;
@@ -44,7 +44,7 @@ paper-dropdown-menu[operators]{
   margin-top: -10px;
 }
 paper-input{
-  width: 186px;
+  width: 190px;
   float: left;
   margin: -22px 8px 0px -8px;
   --paper-input-container-color: var(--x-query-background-color,#00ad99);

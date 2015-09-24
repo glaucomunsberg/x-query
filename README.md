@@ -1,6 +1,6 @@
 # <x-query>
 
-x-query allow the users to building your own logic query
+x-query allow the users to build your own logic query
 
 A x-query component using [polymer 1.0](http://polymer-project.org).
 

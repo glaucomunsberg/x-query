@@ -2,36 +2,63 @@ Polymer({
   is: "x-query",
   properties:{
     /**
-     * Identifier of person.
+     * Identifier of x-query.
      */
     id:{
       type: String,
       value: "0"
     },
+    /**
+     * permit to check if the interface field were completed.
+     */
     _readyToQuery:{
       type:Boolean,
       value: false
     },
+    /**
+     * Array with the operatos permited on x-query
+     *  Operator ['logic_operation','label','is_used_to_numbers']
+     */
     _operators:{
       type: Array,
       value: function(){
-        return [['or','ou',true],['and','e',true],['order','ordenar',true],['limit','limitar',true],['least','Ao menos',false],['until','até',false]];
+        return [
+          ['or','ou',true],['and','e',true],['order','ordenar',true],['limit','limitar',true],['least','Ao menos',false],['until','até',true],['and_parenteses_left','e (',true],['or_parenteses_left','ou (',true], ['parenteses_right',')',true]
+        ];
       }
     },
+    /**
+     * Array with the properties permited on x-query
+     *  Property ['label',<Type>,'field',[Values],<Ordernable>]
+     *
+     *  Type        : permited only 'array' | 'number' | 'string']
+     *  Values      : is an Array   ['value_1','value_2']
+     *  Ordernable  : permited only true | false]
+     *
+     *  Atention
+     *      Number and String types the Value needs be []
+     */
     _properties:{
       type: Array,
       value: function(){
         return [
-          ["Escolaridade","array","graduacao",['Mestrado','Graduação','Doutorado','Pós-Doutorado'],true],
-          ["Universidade","array","universidade",['UFPel','UFRG','UFRGS','UFSM'],true],
-          ["Nome","string",'nome',[],false],
-          ["Sobrenome","string",'sobrenome',[],false],
-          ["Publições","number",'publicoes',[],false],
-          ["Artigos","number",'artigos',[],false],
-          ["Patentes","number",'patentes',[],false],
-          ["Idade",'number','age',[],false]
+          //["Escolaridade","array","graduacao",['Mestrado','Graduação','Doutorado','Pós-Doutorado'],true],
+          //["Universidade","array","universidade",['UFPel','UFRG','UFRGS','UFSM'],true],
+          //["Nome","string",'nome',[],false],
+          //["Sobrenome","string",'sobrenome',[],false],
+          //["Publições","number",'publicoes',[],false],
+          //["Artigos","number",'artigos',[],false],
+          //["Patentes","number",'patentes',[],false],
+          //["Idade",'number','age',[],false]
         ];
       }
+    },
+    /**
+     * property used to check parenteses use on x-query
+     */
+    _isParenteseUsed:{
+      type:Boolean,
+      value: false
     }
   },
   /**
@@ -39,48 +66,128 @@ Polymer({
    */
   ready: function(){
     //console.log('x-query',this.getNextID());
+    this.$.query_ui.addEventListener("click",this.checkQuery);
+    this.$.query_ui.addEventListener("click",this.checkQuery);
   },
+  /**
+   * Method that create line at line on interface
+   */
   newLine: function(){
     //console.log('newLine');
-    var id = this.getNextID();
+    var id = this._getNextID();
     if(this.$.query_ui.querySelectorAll('div').length == 0){
       $(this.$.query_ui).append("<div id='"+id+"' class='style-scope x-query horizonal layout start'><div corner class='flex style-scope x-query' ></div>"+this._generateProperts(id)+"<paper-icon-button class='one style-scope x-query' icon='cancel'></paper-icon-button></div>")
       this.$.query_ui.querySelector("div[id='"+id+"'] paper-dropdown-menu[properties]").addEventListener("click",this._propertClicked);
     }else{
       $(this.$.query_ui).append("<div id='"+id+"' class='style-scope x-query horizonal layout start'>"+this._generateOperators(id)+"<paper-icon-button class='one style-scope x-query' icon='cancel'></paper-icon-button></div>")
+
+      if(this._isParenteseUsed){
+        this.$.query_ui.querySelector("div[id='"+id+"']").style.paddingLeft = '45px';
+      }
+
       this.$.query_ui.querySelector("div[id='"+id+"'] paper-dropdown-menu[operators]").addEventListener("click",this._operatorClicked);
     }
-    this.$.query_ui.querySelector("div[id='"+id+"'] paper-icon-button[icon='cancel']").addEventListener("click",this.cancel);
+    this.$.query_ui.querySelector("div[id='"+id+"'] paper-icon-button[icon='cancel']").addEventListener("click",this._cancel);
     this.checkQuery();
     this._checkDropdownMenus();
   },
+  /**
+   * Method used by user to get all Properties
+   */
+  listProperties: function(){
+    return this._properties;
+  },
+  /**
+   * Method used by user to get all Operations
+   */
+  listOperators: function(){
+    return this._operators;
+  },
+  /**
+   * Remove one of propertys used at x-query
+   * Parm: The field name
+   */
+  removeProperty:function(property_field){
+    deleted = false;
+    for(var a=0; a < this._properties.length;a++){
+      if(this._properties[a][2] == property_field){
+        this._properties.splice(a,1);
+        deleted = !deleted;
+      }
+    }
+    console.log('deleted',deleted);
+  },
+  /**
+   * Method to insert a new property
+   * parm: label, typed, field,values and isToNumber (check _properties constructor types)
+   */
+  addProperty: function(label,typed,field,values,isToNumber){
+    isOk = false;
+    switch (typed) {
+      case 'number':
+      case 'array':
+      case 'string':
+        isOk = true;
+        break;
+      default:
+        console.log('x-query','type is not string with number, array or string')
+    }
+    if(values.constructor !== Array ){
+      console.log('x-query','values is not type of Array');
+      isOk = false;
+    }
+    if(isToNumber.constructor !== Boolean){
+      console.log('x-query','isToNumber is not type of Boolean');
+      isOk = false;
+    }
+    if(isOk){
+      this._properties.push([label,typed,field,values,isToNumber]);
+    }
+  },
+  /**
+   * Called when needs create a new operator on interface
+   */
   _generateOperators: function(id){
-    //console.log('_generateOperators')
+    console.log('_generateOperators')
     operators = this._operators;
     string = "<paper-dropdown-menu operators class='x-query' label='Operador' no-label-float><paper-menu class='dropdown-content'>";
-    for(a=0;a < operators.length;a++){
+    for(var a=0;a < operators.length;a++){
       if(operators[a][2]){
-        string+="<paper-item value='"+operators[a][0]+"'>"+operators[a][1]+"</paper-item>"
+        if(this._isParenteseUsed){
+          if(operators[a][0] != 'or_parenteses_left' && operators[a][0] != 'and_parenteses_left' ){
+            string+="<paper-item value='"+operators[a][0]+"'>"+operators[a][1]+"</paper-item>"
+          }
+        }else{
+          string+="<paper-item value='"+operators[a][0]+"'>"+operators[a][1]+"</paper-item>"
+        }
+
       }
 
     }
     return string += "</paper-menu></paper-dropdown-menu>";
   },
+  /**
+   * Callend to create all properties on interface
+   */
   _generateProperts: function(){
-    //console.log('_generateProperts');
+    console.log('_generateProperts');
     properties = this._properties;
     string  = "<paper-dropdown-menu properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
-    for(a=0;a<properties.length;a++){
+    for(var a=0;a<properties.length;a++){
       string += "<paper-item value='"+properties[a][2]+"'>"+properties[a][0]+"</paper-item>"
     }
     string += "</paper-menu></paper-dropdown-menu>";
     return string
   },
+  /**
+   * Differnt of _generateProperts this method use only
+   *  the properties that can be used to order
+   */
   _generatePropertsToOrder: function(){
-    //console.log('_generatePropertsToOrder');
+    console.log('_generatePropertsToOrder');
     properties = this._properties;
     string  = "<paper-dropdown-menu properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
-    for(a=0;a<properties.length;a++){
+    for(var a=0;a<properties.length;a++){
       if(properties[a][4]){
         string += "<paper-item value='"+properties[a][2]+"'>"+properties[a][0]+"</paper-item>"
       }
@@ -88,8 +195,11 @@ Polymer({
     string += "</paper-menu></paper-dropdown-menu>";
     return string
   },
+  /**
+   * Function on Click at one Operator
+   */
   _operatorClicked:function(e){
-    //console.log('_operatorClicked');
+    console.log('_operatorClicked',this.parentNode);
     property_id = e.target.getAttribute('value');
 
     if(property_id != "" && property_id != null){
@@ -119,12 +229,7 @@ Polymer({
       }
       parent.removeChild(icon_remove);
 
-      //console.log('operator_id',property_id);
-      //console.log('paper_dropdown',paper_dropdown);
-      //console.log('operators',operators);
-      //console.log('parent',parent);
-
-      for(a=0;a<operators.length;a++){
+      for(var a=0;a<operators.length;a++){
         if(property_id == operators[a][0]){
           switch (property_id) {
             case 'or':
@@ -151,6 +256,18 @@ Polymer({
                   parent.querySelector("paper-dropdown-menu[filters]").addEventListener("click",x_query._valueChange);
                   //console.log('order')
                   break;
+              case 'and_parenteses_left':
+              case 'or_parenteses_left':
+                  x_query._isParenteseUsed = true;
+                  string = x_query._generateProperts();
+                  $(parent).append(string);
+                  parent.querySelector("paper-dropdown-menu[properties]").addEventListener("click",x_query._propertClicked);
+                  break;
+              case 'parenteses_right':
+                  console.log('parenteses_right');
+                  x_query._isParenteseUsed = false;
+                  this.parentNode.style.paddingLeft = '0px';
+                  break;
             default:
 
           }
@@ -160,11 +277,15 @@ Polymer({
       }
     }
   },
+
+  /**
+   * Function on Click at one Filter
+   */
   _filtersClicked: function(e){
-    //console.log('_filtersClicked')
+    console.log('_filtersClicked')
     var x_query = 'nada';
     el = this;
-    tagName = "x-query".toLowerCase();
+    tagName = "x-query";
 
     while (el && el.parentNode) {
       el = el.parentNode;
@@ -175,8 +296,12 @@ Polymer({
 
     x_query.checkQuery();
   },
+
+  /**
+   * Function on Click on one Property
+   */
   _propertClicked:function(e){
-    //console.log('_propertClicked',e.target)
+    console.log('_propertClicked',e.target)
     property_id = e.target.getAttribute('value');
 
     if(property_id != "" && property_id != null){
@@ -212,7 +337,7 @@ Polymer({
               string += "</paper-menu></paper-dropdown-menu>";
               $(parent).append(string);
               string = "<paper-dropdown-menu values label='valor' class='x-query'><paper-menu class='dropdown-content'>";
-              for(b=0;b < properties[a][3].length;b++){
+              for(var b=0;b < properties[a][3].length;b++){
                 string += "<paper-item value='"+properties[a][3][b]+"'>"+properties[a][3][b]+"</paper-item>";
               }
               string += "</paper-menu></paper-dropdown-menu>";
@@ -260,8 +385,12 @@ Polymer({
       x_query.checkQuery();
     }
   },
+  /**
+   * When any value change this method will call to
+   *  check interface build lines
+   */
   _valueChange: function(e){
-    //console.log('_valueChange')
+    console.log('_valueChange')
     var x_query = 'nada';
     el = this;
     tagName = "x-query".toLowerCase();
@@ -275,18 +404,22 @@ Polymer({
     x_query.checkQuery();
 
   },
+  /**
+   * Method that check if the lines are builded right then
+   *  pint the border-lines with red or the primary color
+   */
   checkQuery:function(){
-    //console.log('checkQuery');
+    console.log('checkQuery');
     lines = this.$.query_ui;
     linesOk = [];
     if(lines.childElementCount == 0){
       this.$.base.querySelector("div[line]").style.background = '#00ad99';
     }
-    for(a=0;a < lines.childElementCount;a++){
+    for(var a=0;a < lines.childElementCount;a++){
       lineIsNotComplet = false;
       line = lines.children[a];
       menus = line.querySelectorAll('paper-dropdown-menu');
-      for(b=0;b < menus.length;b++){
+      for(var b=0;b < menus.length;b++){
         menu = menus[b];
         if(menu.selectedItem == "" || menu.selectedItem == null){
           lineIsNotComplet = true;
@@ -294,7 +427,7 @@ Polymer({
 
       }
       inputs = line.querySelectorAll('paper-input');
-      for(b=0;b < inputs.length;b++){
+      for(var b=0;b < inputs.length;b++){
         input = inputs[b]
         if(input.value == "" || input.value == null){
           lineIsNotComplet = true;
@@ -307,10 +440,10 @@ Polymer({
           line.querySelector('div[corner]').style.borderTopColor = '#f04b57';
           line.querySelector('div[corner]').style.borderLeftColor = '#f04b57';
         }
-        for(b=0;b < menus.length;b++){
+        for(var b=0;b < menus.length;b++){
           menus[b].getElementsByClassName("unfocused-line")[0].style.background ='#f04b57';;
         }
-        for(b=0;b < inputs.length;b++){
+        for(var b=0;b < inputs.length;b++){
           inputs[b].getElementsByClassName("unfocused-line")[0].style.background ='#f04b57';
         }
 
@@ -322,10 +455,10 @@ Polymer({
           line.querySelector('div[corner]').style.borderTopColor = '#00ad99';
           line.querySelector('div[corner]').style.borderLeftColor = '#00ad99';
         }
-        for(b=0;b < menus.length;b++){
+        for(var b=0;b < menus.length;b++){
           menus[b].getElementsByClassName("unfocused-line")[0].style.background ='#00ad99';;
         }
-        for(b=0;b < inputs.length;b++){
+        for(var b=0;b < inputs.length;b++){
           inputs[b].getElementsByClassName("unfocused-line")[0].style.background ='#00ad99';
         }
       }
@@ -346,22 +479,29 @@ Polymer({
       }
     }
   },
+  /**
+   * Function that enable the dropdowns menu
+   *  ALERT: Polymer error
+   */
   _checkDropdownMenus: function(e){
-    //console.log('_checkDropdownMenus');
+    console.log('_checkDropdownMenus');
     paper_dropdowns = this.$.query_ui.querySelectorAll('paper-dropdown-menu');
-     for(a=0; a < paper_dropdowns.length;a++){
+     for(var a=0; a < paper_dropdowns.length;a++){
        paper_dropdowns[a].disabled = false;
        paper_dropdowns[a].querySelector('paper-input').disabled = false;
        paper_dropdowns[a].querySelector('paper-menu-button').disabled = false;
        paper_dropdowns[a].querySelector('iron-dropdown').disabled = false;
      }
   },
+  /**
+   * Method used to create the query array based on interface lines
+   */
   mountQuery:function(){
-    //console.log('mountQuery');
+    console.log('mountQuery');
     query = []
     if(this._readyToQuery){
       lines = this.$.query_ui;
-      for(a=0;a < lines.childElementCount;a++){
+      for(var a=0;a < lines.childElementCount;a++){
         line = lines.children[a];
         query_line = []
         operator = line.querySelector('paper-dropdown-menu[operators]');
@@ -370,6 +510,8 @@ Polymer({
           query_line = []
           query_line.push(operator.selectedItem.getAttribute('value'));
           switch(operator.selectedItem.getAttribute('value')){
+            case 'or_parenteses_left':
+            case 'and_parenteses_left':
             case 'or':
             case 'and':
               query_line.push(line.querySelector('paper-dropdown-menu[properties]').selectedItem.getAttribute('value'));
@@ -408,15 +550,22 @@ Polymer({
       return [];
     }
   },
-  cancel: function(){
-    //console.log('cancel');
+  /**
+   * Method used to remove one of interfaces lines
+   */
+ _cancel: function(){
+    console.log('cancel');
     x_query = this.parentNode.parentNode.parentNode;
     toRemove = this.parentNode
     this.parentNode.parentNode.removeChild(toRemove);
     x_query.checkQuery();
   },
-  getNextID: function(){
-    //console.log('getNextID');
+  /**
+   * A method that create a individual Identifier
+   *  to each line on interface
+   */
+  _getNextID: function(){
+    console.log('getNextID');
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
 });
