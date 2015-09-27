@@ -8,6 +8,10 @@ Polymer({
       type: String,
       value: "0"
     },
+    mysql:{
+      type: Boolean,
+      value:false
+    },
     /**
      * permit to check if the interface field were completed.
      */
@@ -32,8 +36,8 @@ Polymer({
      *  Property ['label',<Type>,'field',[Values],<Ordernable>]
      *
      *  Type        : permited only 'array' | 'number' | 'string']
-     *  Values      : is an Array   ['value_1','value_2']
-     *  Ordernable  : permited only true | false]
+     *  Values      : is an Array   [['id','value_1'],['id','value_2']]
+     *  Ordernable  : permited only true | false
      *
      *  Atention
      *      Number and String types the Value needs be []
@@ -42,14 +46,14 @@ Polymer({
       type: Array,
       value: function(){
         return [
-          //["Escolaridade","array","graduacao",['Mestrado','Graduação','Doutorado','Pós-Doutorado'],true],
-          //["Universidade","array","universidade",['UFPel','UFRG','UFRGS','UFSM'],true],
-          //["Nome","string",'nome',[],false],
-          //["Sobrenome","string",'sobrenome',[],false],
-          //["Publições","number",'publicoes',[],false],
-          //["Artigos","number",'artigos',[],false],
-          //["Patentes","number",'patentes',[],false],
-          //["Idade",'number','age',[],false]
+          ["Escolaridade","array","graduacao",[[0,'Mestrado'],[1,'Graduação'],[2,'Doutorado'],[3,'Pós-Doutorado']],true],
+          ["Universidade","array","universidade",[[0,'UFPel'],[1,'UFRG'],[2,'UFRGS'],[3,'UFSM']],true],
+          ["Nome","string",'nome',[],false],
+          ["Sobrenome","string",'sobrenome',[],false],
+          ["Publições","number",'publicoes',[],false],
+          ["Artigos","number",'artigos',[],false],
+          ["Patentes","number",'patentes',[],false],
+          ["Idade",'number','age',[],false]
         ];
       }
     },
@@ -115,7 +119,7 @@ Polymer({
         deleted = !deleted;
       }
     }
-    console.log('deleted',deleted);
+    //console.log('deleted',deleted);
   },
   /**
    * Method to insert a new property
@@ -148,7 +152,7 @@ Polymer({
    * Called when needs create a new operator on interface
    */
   _generateOperators: function(id){
-    console.log('_generateOperators')
+    //console.log('_generateOperators')
     operators = this._operators;
     string = "<paper-dropdown-menu operators class='x-query' label='Operador' no-label-float><paper-menu class='dropdown-content'>";
     for(var a=0;a < operators.length;a++){
@@ -170,7 +174,7 @@ Polymer({
    * Callend to create all properties on interface
    */
   _generateProperts: function(){
-    console.log('_generateProperts');
+    //console.log('_generateProperts');
     properties = this._properties;
     string  = "<paper-dropdown-menu properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
     for(var a=0;a<properties.length;a++){
@@ -184,7 +188,7 @@ Polymer({
    *  the properties that can be used to order
    */
   _generatePropertsToOrder: function(){
-    console.log('_generatePropertsToOrder');
+    //console.log('_generatePropertsToOrder');
     properties = this._properties;
     string  = "<paper-dropdown-menu properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
     for(var a=0;a<properties.length;a++){
@@ -199,7 +203,7 @@ Polymer({
    * Function on Click at one Operator
    */
   _operatorClicked:function(e){
-    console.log('_operatorClicked',this.parentNode);
+    //console.log('_operatorClicked',this.parentNode);
     property_id = e.target.getAttribute('value');
 
     if(property_id != "" && property_id != null){
@@ -264,7 +268,7 @@ Polymer({
                   parent.querySelector("paper-dropdown-menu[properties]").addEventListener("click",x_query._propertClicked);
                   break;
               case 'parenteses_right':
-                  console.log('parenteses_right');
+                  //console.log('parenteses_right');
                   x_query._isParenteseUsed = false;
                   this.parentNode.style.paddingLeft = '0px';
                   break;
@@ -282,7 +286,7 @@ Polymer({
    * Function on Click at one Filter
    */
   _filtersClicked: function(e){
-    console.log('_filtersClicked')
+    //console.log('_filtersClicked')
     var x_query = 'nada';
     el = this;
     tagName = "x-query";
@@ -301,7 +305,7 @@ Polymer({
    * Function on Click on one Property
    */
   _propertClicked:function(e){
-    console.log('_propertClicked',e.target)
+    //console.log('_propertClicked',e.target)
     property_id = e.target.getAttribute('value');
 
     if(property_id != "" && property_id != null){
@@ -338,7 +342,7 @@ Polymer({
               $(parent).append(string);
               string = "<paper-dropdown-menu values label='valor' class='x-query'><paper-menu class='dropdown-content'>";
               for(var b=0;b < properties[a][3].length;b++){
-                string += "<paper-item value='"+properties[a][3][b]+"'>"+properties[a][3][b]+"</paper-item>";
+                string += "<paper-item value='"+properties[a][3][b][0]+"'>"+properties[a][3][b][1]+"</paper-item>";
               }
               string += "</paper-menu></paper-dropdown-menu>";
               $(parent).append(string);
@@ -390,7 +394,7 @@ Polymer({
    *  check interface build lines
    */
   _valueChange: function(e){
-    console.log('_valueChange')
+    //console.log('_valueChange')
     var x_query = 'nada';
     el = this;
     tagName = "x-query".toLowerCase();
@@ -409,7 +413,7 @@ Polymer({
    *  pint the border-lines with red or the primary color
    */
   checkQuery:function(){
-    console.log('checkQuery');
+    //console.log('checkQuery');
     lines = this.$.query_ui;
     linesOk = [];
     if(lines.childElementCount == 0){
@@ -484,7 +488,7 @@ Polymer({
    *  ALERT: Polymer error
    */
   _checkDropdownMenus: function(e){
-    console.log('_checkDropdownMenus');
+    //console.log('_checkDropdownMenus');
     paper_dropdowns = this.$.query_ui.querySelectorAll('paper-dropdown-menu');
      for(var a=0; a < paper_dropdowns.length;a++){
        paper_dropdowns[a].disabled = false;
@@ -497,7 +501,7 @@ Polymer({
    * Method used to create the query array based on interface lines
    */
   mountQuery:function(){
-    console.log('mountQuery');
+    //console.log('mountQuery');
     query = []
     if(this._readyToQuery){
       lines = this.$.query_ui;
@@ -545,16 +549,107 @@ Polymer({
         }
 
       }
+
+      if(this.mysql){
+        return this._getMySQL(query);
+      }
+
       return query;
     }else{
       return [];
     }
   },
   /**
+   * Method that send a mysql query
+   */
+  _getMySQL: function(query){
+    var query_mysql = "";
+    for(var a=0;a < query.length;a++){
+      switch (query[a][0]) {
+        case '':
+          query_mysql += query[a][1]+" ";
+          break;
+        case 'and_parenteses_left':
+            query_mysql+= 'and ('+query[a][1]+" ";
+            break;
+        case 'or_parenteses_left':
+            query_mysql+= 'or ('+query[a][1]+" ";
+            break;
+        case 'parenteses_right':
+            query_mysql+= ')';
+            break;
+        case 'and':
+          query_mysql +=  'and '+query[a][1]+" ";
+          break;
+        case 'or':
+          query_mysql +=  'or '+query[a][1]+" ";
+          break;
+        default:
+
+      }
+      type = '';
+      for(var b=0;b < this._properties.length;b++){
+        if(query[a][1] == this._properties[b][2]){
+          //console.log('type: ',this._properties[b][1])
+          type = this._properties[b][1]
+        }
+      }
+      query_mysql += this._mysqlOperators(type,query[a][2],query[a][3])+"\n";
+    }
+    for(var a=0;a < query.length;a++){
+      switch (query[a][0]) {
+        case 'limit':
+          query_mysql += "limit "+query[a][1]+"\n";
+          break;
+        case 'order':
+          query_mysql += "order by "+query[a][1]+" "+query[a][2]+"\n";
+          break;
+        default:
+      }
+    }
+    console.log('MYSQL',query_mysql);
+  },
+  _mysqlOperators: function(type,operator,next){
+    switch (operator) {
+      case 'different':
+          return " != "+next
+          break;
+      case 'equal':
+          if(type == 'string'){
+            return " like \'"+next+"\'";
+          }else{
+            return " = "+next;
+          }
+          break;
+      case 'contains':
+          return " like \'%"+next+"%\'"
+          break;
+      case 'less':
+          return " < "+next
+          break;
+      case 'until':
+          return " <= "+next
+          break;
+      case 'least':
+          return " >= "+next
+          break;
+      case 'bigger':
+          return " > "+next
+          break;
+      case 'bigger':
+          return " > "+next
+          break;
+      default:
+
+          //console.log("\'\' operator=",query[a][2]);
+          return ""
+    }
+  },
+  /**
    * Method used to remove one of interfaces lines
    */
  _cancel: function(){
-    console.log('cancel');
+    //console.log('cancel');
     x_query = this.parentNode.parentNode.parentNode;
     toRemove = this.parentNode
     this.parentNode.parentNode.removeChild(toRemove);
@@ -565,7 +660,7 @@ Polymer({
    *  to each line on interface
    */
   _getNextID: function(){
-    console.log('getNextID');
+    //console.log('getNextID');
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
 });

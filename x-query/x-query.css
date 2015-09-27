@@ -27,6 +27,10 @@ div[corner]{
 paper-icon-button[icon='cancel']{
   float: left;
 }
+paper-icon-button[icon='add-circle'] * iron-icon{
+  height: 40px;
+  width: 40px;
+}
 paper-dropdown-menu{
   --paper-input-container-focus-color: var(--x-query-background-color,#00ad99);
   --paper-input-container-color: var(--x-query-background-color,#00ad99);

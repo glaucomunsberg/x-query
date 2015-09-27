@@ -23,6 +23,7 @@ And enjoy :)
 Attribute     | Options     | Default              | Description
 ---           | ---         | ---                  | ---
 `id`          | *String*    | ''                   | The `id` attribute sets the identifier value.
+`mysql`       | *Boolean*   | false                | at mountQuery the x-query send the mysql where clause
 
 
 ##Styling
