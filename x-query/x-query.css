@@ -7,8 +7,11 @@ div[line]{
   position: absolute;
   width: 1px;
   background: white;
-  height: 16px;
-  margin-top: -6px;
+  height: 11px;
+}
+div[line_operator]{
+  margin-left: 40px;
+  border-left: 1px solid var(--x-query-background-color,#00ad99);
 }
 div[line_add]{
   margin-left: 40px;
@@ -16,20 +19,16 @@ div[line_add]{
 div[corner]{
   border-top: 1px solid var(--x-query-background-color,#00ad99);
   border-left: 1px solid var(--x-query-background-color,#00ad99);
-  height: 9px;
+  height: 20px;
   border-top-left-radius: 20px;
   position: relative;
-  width: 64px;
+  width: 113px;
   float:left;
   margin-left: 40px;
   margin-top: 30px;
 }
 paper-icon-button[icon='cancel']{
   float: left;
-}
-paper-icon-button[icon='add-circle'] * iron-icon{
-  height: 40px;
-  width: 40px;
 }
 paper-dropdown-menu{
   --paper-input-container-focus-color: var(--x-query-background-color,#00ad99);
@@ -44,7 +43,7 @@ paper-dropdown-menu.error{
 }
 paper-dropdown-menu[operators]{
   width: 120px;
-  margin-left: -15px;
+  margin-left: -8px;
   margin-top: -10px;
 }
 paper-input{
@@ -66,5 +65,5 @@ paper-input[error]{
 
 div[start] paper-icon-button{
   color: var(--x-query-background-color,#00ad99);
-  margin-left: 20px;
+  margin-left: 15px;
 }

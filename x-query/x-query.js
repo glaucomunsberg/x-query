@@ -46,14 +46,14 @@ Polymer({
       type: Array,
       value: function(){
         return [
-          ["Escolaridade","array","graduacao",[[0,'Mestrado'],[1,'Graduação'],[2,'Doutorado'],[3,'Pós-Doutorado']],true],
-          ["Universidade","array","universidade",[[0,'UFPel'],[1,'UFRG'],[2,'UFRGS'],[3,'UFSM']],true],
-          ["Nome","string",'nome',[],false],
-          ["Sobrenome","string",'sobrenome',[],false],
-          ["Publições","number",'publicoes',[],false],
-          ["Artigos","number",'artigos',[],false],
-          ["Patentes","number",'patentes',[],false],
-          ["Idade",'number','age',[],false]
+          //["Escolaridade","array","graduacao",[[0,'Mestrado'],[1,'Graduação'],[2,'Doutorado'],[3,'Pós-Doutorado']],true],
+          //["Universidade","array","universidade",[[0,'UFPel'],[1,'UFRG'],[2,'UFRGS'],[3,'UFSM']],true],
+          //["Nome","string",'nome',[],false],
+          //["Sobrenome","string",'sobrenome',[],false],
+          //["Publições","number",'publicoes',[],false],
+          //["Artigos","number",'artigos',[],false],
+          //["Patentes","number",'patentes',[],false],
+          //["Idade",'number','age',[],false]
         ];
       }
     },
@@ -72,6 +72,9 @@ Polymer({
     //console.log('x-query',this.getNextID());
     this.$.query_ui.addEventListener("click",this.checkQuery);
     this.$.query_ui.addEventListener("click",this.checkQuery);
+    this.$.base.querySelector("paper-icon-button[icon='add-circle'] iron-icon").style.width = '35px';
+    this.$.base.querySelector("paper-icon-button[icon='add-circle'] iron-icon").style.height = '35px';
+
   },
   /**
    * Method that create line at line on interface
@@ -83,7 +86,7 @@ Polymer({
       $(this.$.query_ui).append("<div id='"+id+"' class='style-scope x-query horizonal layout start'><div corner class='flex style-scope x-query' ></div>"+this._generateProperts(id)+"<paper-icon-button class='one style-scope x-query' icon='cancel'></paper-icon-button></div>")
       this.$.query_ui.querySelector("div[id='"+id+"'] paper-dropdown-menu[properties]").addEventListener("click",this._propertClicked);
     }else{
-      $(this.$.query_ui).append("<div id='"+id+"' class='style-scope x-query horizonal layout start'>"+this._generateOperators(id)+"<paper-icon-button class='one style-scope x-query' icon='cancel'></paper-icon-button></div>")
+      $(this.$.query_ui).append("<div id='"+id+"' line_operator class='style-scope x-query horizonal layout start'>"+this._generateOperators(id)+"<paper-icon-button class='one style-scope x-query' icon='cancel'></paper-icon-button></div>")
 
       if(this._isParenteseUsed){
         this.$.query_ui.querySelector("div[id='"+id+"']").style.paddingLeft = '45px';
@@ -450,6 +453,10 @@ Polymer({
         for(var b=0;b < inputs.length;b++){
           inputs[b].getElementsByClassName("unfocused-line")[0].style.background ='#f04b57';
         }
+        if(a != 0){
+          line.style.borderLeftColor = '#f04b57';
+        }
+
 
       }else{
         linesOk.push(a)
@@ -464,6 +471,9 @@ Polymer({
         }
         for(var b=0;b < inputs.length;b++){
           inputs[b].getElementsByClassName("unfocused-line")[0].style.background ='#00ad99';
+        }
+        if(a != 0){
+          line.style.borderLeftColor = '#00ad99';
         }
       }
     }
