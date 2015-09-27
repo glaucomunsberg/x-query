@@ -617,7 +617,8 @@ Polymer({
         default:
       }
     }
-    console.log('MYSQL',query_mysql);
+    //console.log('MYSQL',query_mysql);
+    return query_mysql;
   },
   _mysqlOperators: function(type,operator,next){
     switch (operator) {
