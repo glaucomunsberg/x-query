@@ -417,10 +417,11 @@ Polymer({
    */
   checkQuery:function(){
     //console.log('checkQuery');
-    lines = this.$.query_ui;
+
+    lines = document.querySelector('#query_ui');
     linesOk = [];
     if(lines.childElementCount == 0){
-      this.$.base.querySelector("div[line]").style.background = '#00ad99';
+      document.querySelector('#base').querySelector("div[line]").style.background = '#00ad99';
     }
     for(var a=0;a < lines.childElementCount;a++){
       lineIsNotComplet = false;
@@ -479,10 +480,10 @@ Polymer({
     }
 
     if(linesOk.length == 0){
-      this.$.base.querySelector("div[line]").style.background = '#f04b57';
+      document.querySelector('#base').querySelector("div[line]").style.background = '#f04b57';
       this._readyToQuery = false;
     }else{
-      this.$.base.querySelector("div[line]").style.background = '#00ad99';
+      document.querySelector('#base').querySelector("div[line]").style.background = '#00ad99';
       if(linesOk.length == lines.childElementCount){
 
         this._readyToQuery = true;
