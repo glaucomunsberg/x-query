@@ -27,7 +27,7 @@ Polymer({
       type: Array,
       value: function(){
         return [
-          ['or','ou',true],['and','e',true],['order','ordenar',true],['limit','limitar',true],['least','Ao menos',false],['until','até',true],['and_parenteses_left','e (',true],['or_parenteses_left','ou (',true], ['parenteses_right',')',true]
+          ['or','ou',true],['and','e',true],['order','ordenar',false],['limit','limitar',false],['least','Ao menos',false],['until','até',false],['and_parenteses_left','e (',false],['or_parenteses_left','ou (',false], ['parenteses_right',')',false]
         ];
       }
     },
@@ -157,7 +157,7 @@ Polymer({
   _generateOperators: function(id){
     //console.log('_generateOperators')
     operators = this._operators;
-    string = "<paper-dropdown-menu operators class='x-query' label='Operador' no-label-float><paper-menu class='dropdown-content'>";
+    string = "<paper-dropdown-menu no-animations operators class='x-query' label='Operador' no-label-float><paper-menu class='dropdown-content'>";
     for(var a=0;a < operators.length;a++){
       if(operators[a][2]){
         if(this._isParenteseUsed){
@@ -179,7 +179,8 @@ Polymer({
   _generateProperts: function(){
     //console.log('_generateProperts');
     properties = this._properties;
-    string  = "<paper-dropdown-menu properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
+    string  = "<paper-dropdown-menu no-animations properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
+
     for(var a=0;a<properties.length;a++){
       string += "<paper-item value='"+properties[a][2]+"'>"+properties[a][0]+"</paper-item>"
     }
@@ -193,7 +194,7 @@ Polymer({
   _generatePropertsToOrder: function(){
     //console.log('_generatePropertsToOrder');
     properties = this._properties;
-    string  = "<paper-dropdown-menu properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
+    string  = "<paper-dropdown-menu no-animations properties class='x-query' label='propriedade'><paper-menu class='dropdown-content'>";
     for(var a=0;a<properties.length;a++){
       if(properties[a][4]){
         string += "<paper-item value='"+properties[a][2]+"'>"+properties[a][0]+"</paper-item>"
@@ -255,7 +256,7 @@ Polymer({
             case 'order':
                   string = x_query._generatePropertsToOrder();
                   $(parent).append(string);
-                  string = "<paper-dropdown-menu filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+                  string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
                   string += "<paper-item value='ASC'>ASC</paper-item>";
                   string += "<paper-item value='desc'>DESC</paper-item>";
                   string += "</paper-menu></paper-dropdown-menu>";
@@ -300,7 +301,6 @@ Polymer({
         x_query = el;
       }
     }
-
     x_query.checkQuery();
   },
 
@@ -310,7 +310,6 @@ Polymer({
   _propertClicked:function(e){
     //console.log('_propertClicked',e.target)
     property_id = e.target.getAttribute('value');
-
     if(property_id != "" && property_id != null){
 
       paper_dropdown = this;
@@ -338,12 +337,12 @@ Polymer({
           //console.log(properties[a][1])
           switch (properties[a][1]) {
             case 'array':
-              string = "<paper-dropdown-menu filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+              string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
               string += "<paper-item value='equal'>Igual</paper-item>";
               string += "<paper-item value='different'>Diferente</paper-item>";
               string += "</paper-menu></paper-dropdown-menu>";
               $(parent).append(string);
-              string = "<paper-dropdown-menu values label='valor' class='x-query'><paper-menu class='dropdown-content'>";
+              string = "<paper-dropdown-menu no-animations values label='valor' class='x-query'><paper-menu class='dropdown-content'>";
               for(var b=0;b < properties[a][3].length;b++){
                 string += "<paper-item value='"+properties[a][3][b][0]+"'>"+properties[a][3][b][1]+"</paper-item>";
               }
@@ -354,8 +353,7 @@ Polymer({
               x_query._checkDropdownMenus();
               break;
             case 'number':
-
-                string = "<paper-dropdown-menu filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+                string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
                 string += "<paper-item value='less'>Menor</paper-item>";
                 string += "<paper-item value='until'>Até</paper-item>";
                 string += "<paper-item value='equal'>Igual</paper-item>";
@@ -371,7 +369,7 @@ Polymer({
                 x_query._checkDropdownMenus();
                 break;
             case 'string':
-                string = "<paper-dropdown-menu filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+                string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
                 string += "<paper-item value='contains'>Contém</paper-item>";
                 string += "<paper-item value='equal'>Igual</paper-item>";
                 string += "<paper-item value='different'>Diferente</paper-item>";
@@ -390,6 +388,169 @@ Polymer({
         }
       }
       x_query.checkQuery();
+    }
+  },
+
+  _propertClickedWithId(property_id, dropdown) {
+
+    if(property_id != "" && property_id != null){
+
+      paper_dropdown = dropdown;
+      x_query = dropdown.parentNode.parentNode.parentNode;
+      properties = dropdown.parentNode.parentNode.parentNode._properties;
+      parent = paper_dropdown.parentNode;
+      icon_remove = parent.querySelector('paper-icon-button');
+      parent.removeChild(icon_remove);
+
+      for(var a=0;a<properties.length;a++){
+        if(property_id == properties[a][2]){
+
+          element = parent.querySelector('paper-dropdown-menu[filters]');
+          if(element != null && element != ""){
+            parent.removeChild(element)
+          }
+          element = parent.querySelector('paper-input[values]');
+          if(element != null && element != ""){
+            parent.removeChild(element)
+          }
+          element = parent.querySelector('paper-dropdown-menu[values]');
+          if(element != null && element != ""){
+            parent.removeChild(element)
+          }
+          //console.log(properties[a][1])
+          switch (properties[a][1]) {
+            case 'array':
+              string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+              string += "<paper-item value='equal'>Igual</paper-item>";
+              string += "<paper-item value='different'>Diferente</paper-item>";
+              string += "</paper-menu></paper-dropdown-menu>";
+              $(parent).append(string);
+              string = "<paper-dropdown-menu no-animations values label='valor' class='x-query'><paper-menu class='dropdown-content'>";
+              for(var b=0;b < properties[a][3].length;b++){
+                string += "<paper-item value='"+properties[a][3][b][0]+"'>"+properties[a][3][b][1]+"</paper-item>";
+              }
+              string += "</paper-menu></paper-dropdown-menu>";
+              $(parent).append(string);
+              parent.querySelector("paper-dropdown-menu[filters]").addEventListener("click",x_query._filtersClicked);
+              parent.querySelector("paper-dropdown-menu[values]").addEventListener("change",x_query._valueChange);
+              x_query._checkDropdownMenus();
+              break;
+            case 'number':
+
+                string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+                string += "<paper-item value='less'>Menor</paper-item>";
+                string += "<paper-item value='until'>Até</paper-item>";
+                string += "<paper-item value='equal'>Igual</paper-item>";
+                string += "<paper-item value='least'>Ao Menos</paper-item>";
+                string += "<paper-item value='bigger'>Maior</paper-item>";
+                string += "<paper-item value='different'>Diferente</paper-item>";
+                string += "</paper-menu></paper-dropdown-menu>";
+                $(parent).append(string);
+                string = "<paper-input values class='x-query' type='number' label='valor'></paper-input>";
+                $(parent).append(string);
+                parent.querySelector("paper-dropdown-menu[filters]").addEventListener("click",x_query._filtersClicked);
+                parent.querySelector("paper-input[values]").addEventListener("change",x_query._valueChange);
+                x_query._checkDropdownMenus();
+                break;
+            case 'string':
+                string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+                string += "<paper-item value='contains'>Contém</paper-item>";
+                string += "<paper-item value='equal'>Igual</paper-item>";
+                string += "<paper-item value='different'>Diferente</paper-item>";
+                string += "</paper-menu></paper-dropdown-menu>";
+                $(parent).append(string);
+                string = "<paper-input values  class='x-query' type='text' label='valor'></paper-input>";
+                $(parent).append(string);
+                parent.querySelector("paper-dropdown-menu[filters]").addEventListener("click",x_query._filtersClicked);
+                parent.querySelector("paper-input[values]").addEventListener("change",x_query._valueChange);
+                x_query._checkDropdownMenus();
+                break;
+          }
+          //console.log('cccc',a,properties[a][1],property_id)
+          $(parent).append(icon_remove);
+
+        }
+      }
+      x_query.checkQuery();
+    }
+  },
+
+  _operatorClickedWithId:function(property_id, paper_dropdown){
+    //console.log('_operatorClicked',this.parentNode);
+    // property_id = e.target.getAttribute('value');
+
+    if(property_id != "" && property_id != null){
+
+      x_query = paper_dropdown.parentNode.parentNode.parentNode;
+      operators = paper_dropdown.parentNode.parentNode.parentNode._operators;
+      properties = paper_dropdown.parentNode.parentNode.parentNode._properties;
+      parent = paper_dropdown.parentNode;
+      icon_remove = parent.querySelector('paper-icon-button');
+
+      element = parent.querySelector('paper-dropdown-menu[properties]');
+      if(element != null){
+        parent.removeChild(element)
+      }
+      element = parent.querySelector('paper-dropdown-menu[filters]');
+      if(element != null){
+        parent.removeChild(element)
+      }
+      element = parent.querySelector('paper-input[values]');
+      if(element != null){
+        parent.removeChild(element)
+      }
+      element = parent.querySelector('paper-dropdown-menu[values]');
+      if(element != null){
+        parent.removeChild(element)
+      }
+      parent.removeChild(icon_remove);
+
+      for(var a=0;a<operators.length;a++){
+        if(property_id == operators[a][0]){
+          switch (property_id) {
+            case 'or':
+            case 'and':
+                string = x_query._generateProperts();
+                $(parent).append(string);
+                parent.querySelector("paper-dropdown-menu[properties]").addEventListener("click",x_query._propertClicked);
+                //console.log('or or and')
+                break;
+            case 'limit':
+                  string = "<paper-input values class='x-query' type='number' label='valor'></paper-input>";
+                  $(parent).append(string);
+                  parent.querySelector("paper-input[values]").addEventListener("change",x_query._valueChange);
+                  //console.log('limit')
+                  break;
+            case 'order':
+                  string = x_query._generatePropertsToOrder();
+                  $(parent).append(string);
+                  string = "<paper-dropdown-menu no-animations filters label='filtro' class='x-query'><paper-menu class='dropdown-content'>";
+                  string += "<paper-item value='ASC'>ASC</paper-item>";
+                  string += "<paper-item value='desc'>DESC</paper-item>";
+                  string += "</paper-menu></paper-dropdown-menu>";
+                  $(parent).append(string);
+                  parent.querySelector("paper-dropdown-menu[filters]").addEventListener("click",x_query._valueChange);
+                  //console.log('order')
+                  break;
+              case 'and_parenteses_left':
+              case 'or_parenteses_left':
+                  x_query._isParenteseUsed = true;
+                  string = x_query._generateProperts();
+                  $(parent).append(string);
+                  parent.querySelector("paper-dropdown-menu[properties]").addEventListener("click",x_query._propertClicked);
+                  break;
+              case 'parenteses_right':
+                  //console.log('parenteses_right');
+                  x_query._isParenteseUsed = false;
+                  paper_dropdown.parentNode.style.paddingLeft = '0px';
+                  break;
+            default:
+
+          }
+          $(parent).append(icon_remove);
+          x_query._checkDropdownMenus();
+        }
+      }
     }
   },
   /**
@@ -417,11 +578,10 @@ Polymer({
    */
   checkQuery:function(){
     //console.log('checkQuery');
-
-    lines = document.querySelector('#query_ui');
+    lines = this.$.query_ui;
     linesOk = [];
     if(lines.childElementCount == 0){
-      document.querySelector('#base').querySelector("div[line]").style.background = '#00ad99';
+      this.$.base.querySelector("div[line]").style.background = '#00ad99';
     }
     for(var a=0;a < lines.childElementCount;a++){
       lineIsNotComplet = false;
@@ -480,10 +640,10 @@ Polymer({
     }
 
     if(linesOk.length == 0){
-      document.querySelector('#base').querySelector("div[line]").style.background = '#f04b57';
+      this.$.base.querySelector("div[line]").style.background = '#f04b57';
       this._readyToQuery = false;
     }else{
-      document.querySelector('#base').querySelector("div[line]").style.background = '#00ad99';
+      this.$.base.querySelector("div[line]").style.background = '#00ad99';
       if(linesOk.length == lines.childElementCount){
 
         this._readyToQuery = true;
@@ -560,7 +720,6 @@ Polymer({
         }
 
       }
-
       if(this.mysql){
         return this._getMySQL(query);
       }
@@ -618,23 +777,26 @@ Polymer({
         default:
       }
     }
-    //console.log('MYSQL',query_mysql);
     return query_mysql;
   },
   _mysqlOperators: function(type,operator,next){
     switch (operator) {
       case 'different':
-          return " != "+next
+          if(type == 'string'){
+            return " != '"+next+"'";
+          }else{
+            return " != "+next;
+          }
           break;
       case 'equal':
           if(type == 'string'){
-            return " like \'"+next+"\'";
+            return " like '"+next+"'";
           }else{
             return " = "+next;
           }
           break;
       case 'contains':
-          return " like \'%"+next+"%\'"
+          return " like '%"+next+"%'"
           break;
       case 'less':
           return " < "+next
@@ -672,7 +834,70 @@ Polymer({
    *  to each line on interface
    */
   _getNextID: function(){
-    //console.log('getNextID');
+    //console.log('getNextID')
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  },
+
+
+  populateQuery: function(queries){
+    numbers = ["less", "until", "equal", "least", "bigger", "different"];
+    operators_ref = ["or", "and"];
+    for(var q = 0; q < queries.length; q++){
+      var id = this._getNextID();
+      if(this.$.query_ui.querySelectorAll('div').length == 0){
+        $(this.$.query_ui).append("<div id='"+id+"' class='style-scope x-query horizonal layout start'><div corner class='flex style-scope x-query' ></div>"+this._generateProperts(id)+"<paper-icon-button class='one style-scope x-query' icon='cancel'></paper-icon-button></div>")
+        this.$.query_ui.querySelector("div[id='"+id+"'] paper-dropdown-menu[properties]").addEventListener("click",this._propertClicked);
+      }else{
+        $(this.$.query_ui).append("<div id='"+id+"' line_operator class='style-scope x-query horizonal layout start'>"+this._generateOperators(id)+"<paper-icon-button class='one style-scope x-query' icon='cancel'></paper-icon-button></div>")
+
+        if(this._isParenteseUsed){
+          this.$.query_ui.querySelector("div[id='"+id+"']").style.paddingLeft = '45px';
+        }
+
+        this.$.query_ui.querySelector("div[id='"+id+"'] paper-dropdown-menu[operators]").addEventListener("click",this._operatorClicked);
+      }
+      this.$.query_ui.querySelector("div[id='"+id+"'] paper-icon-button[icon='cancel']").addEventListener("click",this._cancel);
+      this.checkQuery();
+      this._checkDropdownMenus();
+
+      if(queries[q][0] !== ""){
+        op_index = operators_ref.indexOf(queries[q][0])
+         $("div[id='"+id+"'] paper-dropdown-menu[operators] paper-menu")[0].selected = op_index;
+         this._operatorClickedWithId(queries[q][0], $("div[id='"+id+"'] paper-dropdown-menu[operators]")[0]);
+      }
+
+     
+      
+      filt_index = -1;
+      prop_index = -1;
+      value_field = '';
+      for (i=0; i<properties.length; i++) {
+        if (properties[i][2] === queries[q][1]) {
+          prop_index = i;
+          filt_index = numbers.indexOf(queries[q][2]);
+          value_field = queries[q][3];
+          break;
+        }
+      }
+
+
+      if (prop_index != -1) {
+
+        $("div[id='"+id+"'] paper-dropdown-menu[properties] paper-menu")[0].selected = prop_index;
+
+        dropdown = this.$.query_ui.querySelector("div[id='"+id+"'] paper-dropdown-menu[properties]");
+        this._propertClickedWithId(queries[q][1], dropdown);
+
+        $("div[id='"+id+"'] paper-dropdown-menu[filters] paper-menu")[0].selected = filt_index;
+        this.checkQuery();
+
+        $("div[id='"+id+"'] paper-input[values]")[0].value = value_field;
+      }
+
+    }
+
   }
+
+
+
 });

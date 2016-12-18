@@ -34,7 +34,8 @@ paper-dropdown-menu{
   --paper-input-container-focus-color: var(--x-query-background-color,#00ad99);
   --paper-input-container-color: var(--x-query-background-color,#00ad99);
   float: left;
-  margin-top: -22px;
+  margin-left: -16px;
+  margin-top: -30px;
 }
 paper-dropdown-menu.error{
   --paper-input-container-focus-color: var(--x-query-background-color-error,#f04b57);
@@ -42,12 +43,13 @@ paper-dropdown-menu.error{
 }
 paper-dropdown-menu[operators]{
   width: 120px;
-  margin-top: -2px;
+  margin-left: -8px;
+  margin-top: -10px;
 }
 paper-input{
   width: 190px;
   float: left;
-  margin: -22px 8px 0px 0px;
+  margin: -22px 8px 0px -8px;
   --paper-input-container-color: var(--x-query-background-color,#00ad99);
   --paper-input-container-focus-color: var(--x-query-background-color,#00ad99);
   --paper-input-container-invalid-color: var(--x-query-background-color-error,#f04b57);
